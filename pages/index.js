@@ -109,7 +109,7 @@ const HomePage = function HomePage(props) {
               down
             }
         }
-        pr0music_items_aggregate {
+        pr0music_items_aggregate(where: {title: {_neq: ""}}) {
           aggregate {
             count
           }
