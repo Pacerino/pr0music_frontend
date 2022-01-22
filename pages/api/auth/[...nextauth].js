@@ -48,5 +48,5 @@ export default NextAuth({
   theme: {
     colorScheme: "dark",
   },
-  secret: "/TUic1g+80PAUCrLjg/ym9e/x7+K5EiXRWVTjsH1K08=",
+  secret: process.env.CLIENT_JWT_SECRET,
 });
