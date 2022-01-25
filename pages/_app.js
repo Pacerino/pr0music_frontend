@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import client from "../apollo-client";
 import { ApolloProvider } from "@apollo/client";
 import Head from 'next/head'
+import Footer from '../components/footer'
 
 
 import {ThemeProvider } from "@mui/material/styles";
@@ -15,7 +16,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../lib/theme"
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-
+  
   return (
     <>
       <Head>
@@ -34,6 +35,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
           ) : (
             <Component {...pageProps} />
           )}
+          <Footer />
           </ApolloProvider>
         </ThemeProvider>
       </SessionProvider>
