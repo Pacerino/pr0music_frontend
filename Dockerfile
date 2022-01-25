@@ -9,6 +9,16 @@ RUN yarn install --frozen-lockfile
 # Rebuild the source code only when needed
 FROM node:16-alpine AS builder
 WORKDIR /app
+
+ARG NEXT_PUBLIC_GO_REVISION
+ENV NEXT_PUBLIC_GO_REVISION ${NEXT_PUBLIC_GO_REVISION}
+
+ARG NEXTAUTH_URL
+ENV NEXTAUTH_URL ${NEXTAUTH_URL}
+
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL ${NEXT_PUBLIC_API_URL}
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN yarn build
