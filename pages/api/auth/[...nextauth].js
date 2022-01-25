@@ -20,7 +20,7 @@ export default NextAuth({
           name: profile.name ?? profile.preferred_username,
           email: profile.email,
           image: profile.picture,
-          roles: profile.resource_access.pr0sauce.roles
+          roles: profile.realm_access.roles
         }
       },
       clientId: process.env.CLIENT_ID,
@@ -28,7 +28,7 @@ export default NextAuth({
     }
   ],
   callbacks: {
-    jwt: async ({token, user, account}) => {
+    jwt: async ({token, user, account}) => { 
       if (account) {
         token.accessToken = account.access_token
       }
