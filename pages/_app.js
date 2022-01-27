@@ -48,9 +48,9 @@ function Auth({ children, options }) {
   const isUser = !!session?.user
   let hasRole = false;
   if(typeof options.role == "string") {
-    hasRole = session?.roles.includes(options.role)
+    hasRole = session?.user.roles.includes(options.role)
   } else if (Array.isArray(options.role)) {
-    hasRole = session?.roles.some(role => options.role.includes(role))
+    hasRole = session?.user.roles.some(role => options.role.includes(role))
   }
 
   React.useEffect(() => {
