@@ -50,6 +50,11 @@ const useStyles = makeStyles((theme) => createStyles({
 
 const Navbar = () => {
     const { data: session, status } = useSession()
+    React.useEffect(() => {
+      if (session?.error === "RefreshAccessTokenError") {
+        signIn(); // Force sign in to hopefully resolve error
+      }
+    }, [session]);
     const loading = status === "loading"
     const classes = useStyles();
 
