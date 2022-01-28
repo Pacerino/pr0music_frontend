@@ -1,7 +1,7 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
-import { withStyles } from "@mui/styles";
-import { useQuery, gql, makeVar } from "@apollo/client";
+import { createStyles, makeStyles } from '@mui/styles';
+import { useQuery, gql } from "@apollo/client";
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,15 +19,25 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Backdrop from '@mui/material/Backdrop';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 
 
-const styles = (theme) => ({
+const useStyles = makeStyles((theme) => createStyles({
     hideOnMobile: {
-        [theme.breakpoints.down("sm")]: {
+        [theme.breakpoints.down("md")]: {
             display: "none",
         },
     },
-});
+    hideOnDesktop: {
+      [theme.breakpoints.up("md")]: {
+        display: "none"
+      },
+    }
+}));
 
 function TablePaginationActions(props) {
   const { count, page, rowsPerPage, onPageChange } = props;
@@ -83,7 +93,7 @@ function TablePaginationActions(props) {
 }
 
 const HomePage = function HomePage(props) {
-
+  const classes = useStyles();
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -126,18 +136,77 @@ const HomePage = function HomePage(props) {
   
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <CircularProgress color="secondary"/>
-      </Box>
+      <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }} open={true}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     );
   } else if (error) {
       console.error(error);
       return <Alert severity='error'>{error.message}</Alert>
   } else {
     return (
-      <div>
-          <Box sx={{ p: 2, height: "100%", width: "100%" }}>
-            <TableContainer component={Paper}>
+        <Box sx={{ p: 2, height: "100%", width: "100%" }}>
+          <TableContainer className={classes.hideOnDesktop}>
+            <Table >
+              <TableBody>
+              {data.pr0music_items.map((row) => (
+                  <TableRow key={row.item_id}>
+                    <Card sx={{ mt:2 }}>
+                      <CardContent>
+                        <Grid container spacing={2}>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>Item ID</Typography>
+                            <Typography sx={{ fontSize: 13 }}><a href={"https://pr0gramm.com/new/" + row.item_id} target="_blank" rel="noreferrer">{row.item_id}</a></Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>Titel</Typography>
+                            <Typography sx={{ fontSize: 13 }}>{row.title}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>Album</Typography>
+                            <Typography sx={{ fontSize: 13 }}>{row.album}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>Artist</Typography>
+                            <Typography sx={{ fontSize: 13 }}>{row.artist}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>Benis</Typography>
+                            <Typography sx={{ fontSize: 13 }}>{(row.comments ? row.comments.up - row.comments.down : 0)}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ fontSize: 12, opacity: 0.54 }}>URL</Typography>
+                            <Typography sx={{ fontSize: 13 }}><a href={row.url} target="_blank" rel="noreferrer">{row.url}</a></Typography>
+                          </Grid>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    rowsPerPageOptions={[5, 10, 15, 20, 25]}
+                    count={data.pr0music_items_aggregate.aggregate.count}
+                    rowsPerPage={rowsPerPage}
+                    component="div"
+                    page={page}
+                    labelRowsPerPage={"Items"}
+                    SelectProps={{
+                      inputProps: {
+                        'aria-label': 'rows per page',
+                      },
+                      native: true,
+                    }}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+          <TableContainer component={Paper} className={classes.hideOnMobile}>
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead>
                   <TableRow>
@@ -152,43 +221,42 @@ const HomePage = function HomePage(props) {
                 <TableBody>
                   {data.pr0music_items.map((row) => (
                     <TableRow key={row.item_id}>
-                      <TableCell align="right">{row.item_id}</TableCell>
+                      <TableCell align="right"><a href={"https://pr0gramm.com/new/" + row.item_id} target="_blank" rel="noreferrer">{row.item_id}</a></TableCell>
                       <TableCell align="right">{row.title}</TableCell>
                       <TableCell align="right">{row.album}</TableCell>
-                      <TableCell align="right">{(row.comments ? row.comments.up - row.comments.down : 0)}</TableCell>
-                      <TableCell align="right">{row.artist}</TableCell>
-                      <TableCell align="right">
-                        <a href={row.url} target="_blank" rel="noreferrer">{row.url}</a>
-                        </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[5, 10, 15, 20, 25]}
-                      count={data.pr0music_items_aggregate.aggregate.count}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      labelRowsPerPage={"Items pro Seite"}
-                      SelectProps={{
-                        inputProps: {
-                          'aria-label': 'rows per page',
-                        },
-                        native: true,
-                      }}
-                      onPageChange={handleChangePage}
-                      onRowsPerPageChange={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </TableContainer>
-          </Box>
-      </div>
+                  <TableCell align="right">{row.artist}</TableCell>
+                  <TableCell align="right">{(row.comments ? row.comments.up - row.comments.down : 0)}</TableCell>
+                  <TableCell align="right">
+                    <a href={row.url} target="_blank" rel="noreferrer">{row.url}</a>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 15, 20, 25]}
+                  count={data.pr0music_items_aggregate.aggregate.count}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  labelRowsPerPage={"Items pro Seite"}
+                  SelectProps={{
+                    inputProps: {
+                      'aria-label': 'rows per page',
+                    },
+                    native: true,
+                  }}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  ActionsComponent={TablePaginationActions}
+                />
+              </TableRow>
+            </TableFooter>
+          </Table>
+          </TableContainer>
+      </Box>
     );
   }
 };
 
-export default withStyles(styles)(HomePage);
+export default HomePage;
