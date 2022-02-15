@@ -50,11 +50,6 @@ const useStyles = makeStyles((theme) => createStyles({
 
 const Navbar = () => {
     const { data: session, status } = useSession()
-    React.useEffect(() => {
-      if (session?.error === "RefreshAccessTokenError") {
-        signIn(); // Force sign in to hopefully resolve error
-      }
-    }, [session]);
     const loading = status === "loading"
     const classes = useStyles();
 
@@ -94,15 +89,15 @@ const Navbar = () => {
               <MenuIcon />
             </IconButton>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                <Button color="inherit" href="/">PR0GRAMM_MUSIC</Button>
+                <Button color="inherit" href="/" sx={{ fontWeight: 'bold' }}>PR0GRAMM_MUSIC</Button>
               </Typography>
               <ButtonGroup variant="text" className={classes.buttonBar}>
                 {session?.user.roles.includes('admin') && <Button color="inherit" startIcon={<ArticleOutlinedIcon />} href="/admin">Admin Dashboard</Button>}
-                <Button color="inherit" startIcon={<ArticleOutlinedIcon />} href="/changelog">Changelog</Button>
-                <Button color="inherit" startIcon={<QueryStatsIcon />} href="/stats">Statistik</Button>
-                <Button color="inherit" startIcon={<DescriptionIcon />} href="https://doc.pr0sauce.info">API Docs</Button>
+                {/* <Button color="inherit" startIcon={<ArticleOutlinedIcon />} href="/changelog">Changelog</Button> */}
+                {/* <Button color="inherit" startIcon={<QueryStatsIcon />} href="/stats">Statistik</Button>
+                <Button color="inherit" startIcon={<DescriptionIcon />} href="https://doc.pr0sauce.info">API Docs</Button> */}
                 <Button color="inherit" startIcon={<GitHubIcon />} href="https://github.com/pacerino">GitHub</Button>
-                {!session ? (
+                {/* {!session ? (
                   <Button color="inherit" onClick={signIn}>
                     Login
                   </Button>
@@ -116,7 +111,7 @@ const Navbar = () => {
                     >
                       {session.user.name}
                     </Button>
-                )}
+                )} */}
               </ButtonGroup>
             </Toolbar>
           </AppBar>
@@ -147,7 +142,7 @@ const Navbar = () => {
           </Menu>
           <Drawer anchor="left" open={drawer} onClose={toggleDrawer(false)} >
           <ListItem component="div" disablePadding>
-            <ListItemButton sx={{ height: 56 }}>
+            {/* <ListItemButton sx={{ height: 56 }}>
               <ListItemIcon>
                 <AccountCircle sx={{color: "text.primary"}} />
               </ListItemIcon>
@@ -159,8 +154,8 @@ const Navbar = () => {
                   variant: 'body2',
                 }}
               />
-            </ListItemButton>
-            {!session ? (
+            </ListItemButton> */}
+            {/* {!session ? (
             <Tooltip title="Einloggen">
               <IconButton size="large" onClick={signIn}>
                 <LoginIcon sx={{color: "text.primary"}}/>
@@ -172,34 +167,34 @@ const Navbar = () => {
                 <LogoutIcon sx={{color: "text.primary"}}/>
               </IconButton>
             </Tooltip>
-            )}
+            )} */}
           </ListItem>
           <Divider sx={{ borderColor: "text.primary" }}/>
           <List>
-            <ListItem button component="a" href="/changelog">
+            {/* <ListItem button component="a" href="/changelog">
               <ListItemButton>
                 <ListItemIcon>
                   <ArticleOutlinedIcon sx={{color: "text.primary"}}/>
                 </ListItemIcon>
                 <ListItemText>Changelog</ListItemText>
               </ListItemButton>
-            </ListItem>
-            <ListItem button component="a" href="/stats">
+            </ListItem> */}
+            {/* <ListItem button component="a" href="/stats">
               <ListItemButton>
                 <ListItemIcon>
                   <QueryStatsIcon sx={{color: "text.primary"}}/>
                 </ListItemIcon>
                 <ListItemText>Statistik</ListItemText>
               </ListItemButton>
-            </ListItem>
-            <ListItem button component="a" href="https://doc.pr0sauce.info">
+            </ListItem> */}
+            {/* <ListItem button component="a" href="https://doc.pr0sauce.info">
               <ListItemButton>
                 <ListItemIcon>
                   <DescriptionIcon sx={{color: "text.primary"}}/>
                 </ListItemIcon>
                 <ListItemText>API Docs</ListItemText>
               </ListItemButton>
-            </ListItem>
+            </ListItem> */}
             <ListItem button component="a" href="https://github.com/pacerino">
               <ListItemButton>
                 <ListItemIcon>
