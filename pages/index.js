@@ -17,6 +17,7 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Backdrop from '@mui/material/Backdrop';
@@ -36,7 +37,10 @@ const useStyles = makeStyles((theme) => createStyles({
       [theme.breakpoints.up("md")]: {
         display: "none"
       },
-    }
+    },
+    selectIcon: {
+      fill: "white",
+  },
 }));
 
 function TablePaginationActions(props) {
@@ -64,6 +68,7 @@ function TablePaginationActions(props) {
         onClick={handleFirstPageButtonClick}
         disabled={page === 0}
         aria-label="first page"
+        color="inherit"
       >
         <FirstPageIcon />
       </IconButton>
@@ -71,6 +76,7 @@ function TablePaginationActions(props) {
         onClick={handleBackButtonClick}
         disabled={page === 0}
         aria-label="previous page"
+        color="inherit"
       >
         <KeyboardArrowLeft />
       </IconButton>
@@ -78,6 +84,7 @@ function TablePaginationActions(props) {
         onClick={handleNextButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="next page"
+        color="inherit"
       >
         <KeyboardArrowRight />
       </IconButton>
@@ -85,6 +92,7 @@ function TablePaginationActions(props) {
         onClick={handleLastPageButtonClick}
         disabled={page >= Math.ceil(count / rowsPerPage) - 1}
         aria-label="last page"
+        color="inherit"
       >
         <LastPageIcon />
       </IconButton>
@@ -104,7 +112,7 @@ const HomePage = function HomePage(props) {
   };
 
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const SEL_AND_COUNT_ITEMS = gql`
     query Items($limit: Int!, $offset: Int!) {
@@ -187,7 +195,7 @@ const HomePage = function HomePage(props) {
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    rowsPerPageOptions={[5, 10, 15, 20, 25]}
+                    rowsPerPageOptions={[10, 15, 20, 25]}
                     count={data.pr0music_items_aggregate.aggregate.count}
                     rowsPerPage={rowsPerPage}
                     component="div"
@@ -199,6 +207,7 @@ const HomePage = function HomePage(props) {
                       },
                       native: true,
                     }}
+                    sx={{color: "secondary"}}
                     onPageChange={handleChangePage}
                     onRowsPerPageChange={handleChangeRowsPerPage}
                   />
@@ -215,7 +224,7 @@ const HomePage = function HomePage(props) {
                     <TableCell align="right">Album</TableCell>
                     <TableCell align="right">Artist</TableCell>
                     <TableCell align="right">Benis</TableCell>
-                    <TableCell align="right">URL</TableCell>
+                    <TableCell align="right"></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -227,7 +236,9 @@ const HomePage = function HomePage(props) {
                   <TableCell align="right">{row.artist}</TableCell>
                   <TableCell align="right">{(row.comments ? row.comments.up - row.comments.down : 0)}</TableCell>
                   <TableCell align="right">
-                    <a href={row.url} target="_blank" rel="noreferrer">{row.url}</a>
+                    <IconButton aria-label="delete" target="_blank" sx={{p:0}} href={row.url} color="inherit">
+                      <OpenInNewIcon />
+                    </IconButton>
                   </TableCell>
                 </TableRow>
               ))}
@@ -235,7 +246,7 @@ const HomePage = function HomePage(props) {
             <TableFooter>
               <TableRow>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, 15, 20, 25]}
+                  rowsPerPageOptions={[10, 15, 20, 25]}
                   count={data.pr0music_items_aggregate.aggregate.count}
                   rowsPerPage={rowsPerPage}
                   page={page}
@@ -243,6 +254,9 @@ const HomePage = function HomePage(props) {
                   SelectProps={{
                     inputProps: {
                       'aria-label': 'rows per page',
+                      classes: {
+                        icon: classes.selectIcon
+                      }
                     },
                     native: true,
                   }}

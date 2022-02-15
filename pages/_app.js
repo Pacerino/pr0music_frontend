@@ -15,15 +15,15 @@ import {ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "../lib/theme"
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }) {
-  
+function MyApp({ Component, pageProps }) {
+
   return (
     <>
       <Head>
         <title>PR0MUSIC</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <SessionProvider session={session}>
+      <SessionProvider session={pageProps.session}>
         <ThemeProvider theme={theme}>
         <ApolloProvider client={client}>
           <CssBaseline />
